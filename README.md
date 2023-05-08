@@ -5,7 +5,7 @@ Templates will be produced in two versions using Pytorch-Lightning and HuggingFa
 
 ## How to use
 Basically, These templates are focused on CLI environment.  
-so you can change hyperparameter of model by argparse  
+so you can change hyperparameter of model by argparse and shell script.  
 
 
 ## Models
