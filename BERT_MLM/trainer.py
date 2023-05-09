@@ -8,8 +8,8 @@ from pytorch_lightning.loggers import WandbLogger
 import deepspeed
 from transformers import BertTokenizer, BertTokenizerFast, DataCollatorForLanguageModeling
 from sklearn.model_selection import train_test_split
-from model import TCRBertModel
-from data import TCRBertDataset, load_data, data_pipeline
+from model import BertModel
+from data import BertDataset, load_data, data_pipeline
 
 
 def train(config):
@@ -30,7 +30,7 @@ def train(config):
     collator = DataCollatorForLanguageModeling(tokenizer, mlm=True, mlm_probability=0.15, return_tensors="pt")
     print("-"*10 + "Collator initialized!" + "-"*10)
     
-    model  = TCRBertModel(config=config)
+    model  = BertModel(config=config)
     print("-"*10 + "Model initialized!" + "-"*10)
     
     train_dataloader, valid_dataloader = data_pipeline(config.data_path, tokenizer, collator, config)

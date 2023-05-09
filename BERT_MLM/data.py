@@ -47,8 +47,8 @@ def data_pipeline(file, tokenizer, collator, config):
     valid_data = tokenizer(valid_data, padding = True, truncation = True, return_tensors = "pt", max_length = config.max_source_length)
     print("-"*10 + "Tokenizing Complete!" + "-"*10)
     
-    train_dataset = TCRBertDataset(data = train_data)
-    valid_dataset = TCRBertDataset(data = valid_data)
+    train_dataset = BertDataset(data = train_data)
+    valid_dataset = BertDataset(data = valid_data)
     print("-"*10 + "Dataset initialized!" + "-"*10)
     
     train_dataloader = DataLoader(train_dataset, 
@@ -69,7 +69,7 @@ def data_pipeline(file, tokenizer, collator, config):
     return train_dataloader, valid_dataloader
     
 
-class TCRBertDataset(Dataset):
+class BertDataset(Dataset):
     def __init__(self, data):
        self.input_ids = torch.LongTensor(data.input_ids)
         

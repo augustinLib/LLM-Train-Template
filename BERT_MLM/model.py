@@ -7,7 +7,7 @@ from transformers import BertForMaskedLM, BertConfig, get_linear_schedule_with_w
 from torch.nn.functional import cross_entropy, binary_cross_entropy_with_logits, softmax
 
 
-class TCRBertModel(pl.LightningModule):
+class BertModel(pl.LightningModule):
     def __init__(self, config) -> None:
         super().__init__()
         self.bert_config = BertConfig(
