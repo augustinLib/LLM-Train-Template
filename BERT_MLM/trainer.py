@@ -35,13 +35,13 @@ def train(config):
     
     train_dataloader, valid_dataloader = data_pipeline(config.data_path, tokenizer, collator, config)
     
-    wandb_logger = WandbLogger(project=config.wandb_project, name=f"TCRBert-batch_size{config.batch_size}")
+    wandb_logger = WandbLogger(project=config.wandb_project, name=f"Bert-batch_size{config.batch_size}")
     wandb_logger.experiment.config["batch_size"] = config.batch_size
     print("-"*10 + "Wandb Setting Complete!" + "-"*10)
     
     checkpoint_callback = ModelCheckpoint(monitor='val_loss',
                                           dirpath='./checkpoint',
-                                          filename= f"TCRBert-batch_size{config.batch_size}"+'-{val_loss:.2f}',
+                                          filename= f"Bert-batch_size{config.batch_size}"+'-{val_loss:.2f}',
                                           save_top_k=1,
                                           save_last=False,
                                           verbose=True,
