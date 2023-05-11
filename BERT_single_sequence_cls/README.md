@@ -1,5 +1,5 @@
-# BERT_MLM
-This template is for training BERT model with Masked Language Model task.  
+# BERT_single_sequence_cls
+This template is for fine-tuning BERT model (Single Sequence Classification task)
 
 ## How to use
 You can run the template by running this script.  
