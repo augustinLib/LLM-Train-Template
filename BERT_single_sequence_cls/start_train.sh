@@ -1,0 +1,1 @@
+python train.py --batch_size 512 --device 3 --max_source_length 64
