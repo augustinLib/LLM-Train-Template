@@ -5,7 +5,6 @@ from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from pytorch_lightning.loggers import WandbLogger
-import deepspeed
 from transformers import BertTokenizer, BertTokenizerFast, DataCollatorForLanguageModeling
 from sklearn.model_selection import train_test_split
 from model import BertModel

@@ -8,7 +8,7 @@ from transformers import BertTokenizer, BertTokenizerFast, DataCollatorForLangua
 from sklearn.model_selection import train_test_split
 import gc
 
-def load_data(file):
+def load_data(file, config):
     if isinstance(file, str):
         file_type = file.split(".")[-1]
         if file_type == "xlsx":
@@ -29,27 +29,26 @@ def load_data(file):
     else:
         raise TypeError("file must be a string or a pandas DataFrame")
     
-    data = df["AASeq"].to_list()
+    data = df[config.col_name].to_list()
     
     return data
 
 
 def data_pipeline(file, tokenizer, collator, config):
-    data = load_data(file)
+    data = load_data(file, config)
     print("-"*10 + "Data Loaded!" + "-"*10)
     
-    train_data, valid_data = train_test_split(data, test_size=0.05, shuffle=True, random_state=42)
+    train_data, valid_data = train_test_split(data, test_size=0.025, shuffle=True, random_state=42)
     del data
     gc.collect()
     print("-"*10 + "Data Split complete!" + "-"*10)
     
-    train_data = tokenizer(train_data, padding = True, truncation = True, return_tensors = "pt", max_length = config.max_source_length)
-    valid_data = tokenizer(valid_data, padding = True, truncation = True, return_tensors = "pt", max_length = config.max_source_length)
-    print("-"*10 + "Tokenizing Complete!" + "-"*10)
-    
-    train_dataset = BertDataset(data = train_data)
-    valid_dataset = BertDataset(data = valid_data)
-    print("-"*10 + "Dataset initialized!" + "-"*10)
+    train_dataset = BertDataset(data = train_data, tokenizer = tokenizer, collator=collator, config = config)
+    gc.collect()
+    print("-"*10 + "Training Dataset initialized!" + "-"*10)
+    valid_dataset = BertDataset(data = valid_data, tokenizer = tokenizer, collator=collator, config = config)
+    gc.collect()
+    print("-"*10 + "Validation Dataset initialized!" + "-"*10)
     
     train_dataloader = DataLoader(train_dataset, 
                                   batch_size=config.batch_size,
@@ -70,11 +69,16 @@ def data_pipeline(file, tokenizer, collator, config):
     
 
 class BertDataset(Dataset):
-    def __init__(self, data):
-       self.input_ids = torch.LongTensor(data.input_ids)
+    def __init__(self, data, tokenizer, collator, config):
+       self.data = data
+       self.config = config
+       self.tokenizer = tokenizer
+       self.collator = collator
         
     def __getitem__(self, idx):
-        return self.input_ids[idx]
+        input_id = self.tokenizer(self.data[idx], padding = "max_length", truncation = False, return_tensors = "pt", max_length = self.config.max_source_length).input_ids
+        input_ids, labels = self.collator.torch_mask_tokens(input_id)
+        return input_ids.squeeze(), labels.squeeze()
     
     def __len__(self):
-        return len(self.input_ids)
+        return len(self.data)

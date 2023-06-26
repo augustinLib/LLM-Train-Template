@@ -18,6 +18,7 @@ def parse_argument():
     parser.add_argument("--batch_size", default= 256, type=int)
     # parser.add_argument("--valid_batch_size", default= 512, type=int)
     parser.add_argument("--max_steps", default=10000000000000000000, type=int)
+    parser.add_argument("--col_name", default= "data", type=str)
     
     args = parser.parse_args()
     
